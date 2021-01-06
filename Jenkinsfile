@@ -1,0 +1,1 @@
+buildDockerAndPublishImage('rsyncd', [mainBranch: 'main'])
