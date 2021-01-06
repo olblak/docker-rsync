@@ -14,7 +14,7 @@ run: build ## Run rsyncd docker image on port 873
 bash: ## Launch a shell inside the container rsyncd
 	docker exec -i -t rsyncd bash
 
-test:
+test: ## Run various tests. It requires "make run" from a different terminal
 	@touch /tmp/fake
 
 	@docker exec -i -t rsyncd /bin/bash -c "echo \"data\" > /srv/releases/jenkins/data"
