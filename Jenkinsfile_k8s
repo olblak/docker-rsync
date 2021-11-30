@@ -1,7 +1,11 @@
 parallel(
   failFast: true,
   'docker-image': {
-    buildDockerAndPublishImage('rsyncd', [mainBranch: 'main',])
+    buildDockerAndPublishImage('rsyncd', [
+        mainBranch: 'main',
+        automaticSemanticVersioning: true,
+        gitCredentials: 'github-app-infra'
+    ])
   },
   'updatecli': {
     withCredentials([string(credentialsId: 'updatecli-github-token', variable: 'UPDATECLI_GITHUB_TOKEN')]) {
