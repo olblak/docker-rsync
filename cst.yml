@@ -4,7 +4,7 @@ metadataTest:
   entrypoint: ["/bin/tini", "--"]
   cmd: ["/usr/bin/rsync","--no-detach","--daemon","--config","/etc/rsyncd.conf"]
   volumes: ["/srv/releases/jenkins", "/tmp", "/var/run"]
-  # workdir: "/home/jenkins"
+  workdir: /srv/releases/jenkins
 
 fileExistenceTests:
   - name: "Rsyncd configuration file"

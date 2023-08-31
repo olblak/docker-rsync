@@ -19,6 +19,8 @@ COPY config/jenkins.motd /etc/jenkins.motd
 
 VOLUME ["/srv/releases/jenkins", "/tmp", "/var/run"]
 
+WORKDIR /srv/releases/jenkins
+
 EXPOSE 873
 
 ENTRYPOINT ["/bin/tini", "--"]
