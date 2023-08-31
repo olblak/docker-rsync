@@ -1,8 +1,11 @@
 FROM debian:bookworm-20230814-slim
 
-VOLUME /srv/releases/jenkins
-
-EXPOSE 873
+## We always want the latest rsync version
+# hadolint ignore=DL3008
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends rsync && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ARG TINI_VERSION=v0.19.0
 
@@ -16,12 +19,10 @@ COPY config/rsyncd.conf /etc/rsyncd.conf
 
 COPY config/jenkins.motd /etc/jenkins.motd
 
-## We always want the latest rsync version
-# hadolint ignore=DL3008
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends rsync && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+VOLUME /srv/releases/jenkins
+
+EXPOSE 873
+
 
 ENTRYPOINT ["/bin/tini", "--"]
 
