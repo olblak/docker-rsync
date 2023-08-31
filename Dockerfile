@@ -9,6 +9,7 @@ RUN apt-get update && \
     "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-$(dpkg --print-architecture)" && \
     chmod +x /bin/tini && \
     apt-get remove --purge --yes ca-certificates curl && \
+    apt-get autoremove --purge --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
