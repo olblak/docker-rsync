@@ -17,10 +17,9 @@ COPY config/rsyncd.conf /etc/rsyncd.conf
 
 COPY config/jenkins.motd /etc/jenkins.motd
 
-VOLUME /srv/releases/jenkins
+VOLUME ["/srv/releases/jenkins", "/tmp", "/var/run"]
 
 EXPOSE 873
-
 
 ENTRYPOINT ["/bin/tini", "--"]
 
