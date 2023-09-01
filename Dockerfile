@@ -1,28 +1,33 @@
-FROM debian:stable
-
-VOLUME /srv/releases/jenkins
-
-EXPOSE 873
+FROM debian:bookworm-20230814-slim
 
 ARG TINI_VERSION=v0.19.0
-
-## URL source: COPY cannot be used
-# hadolint ignore=DL3020
-ADD "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" /bin/tini
-
-RUN chmod +x /bin/tini
-
-COPY config/rsyncd.conf /etc/rsyncd.conf
-
-COPY config/jenkins.motd /etc/jenkins.motd
-
 ## We always want the latest rsync version
 # hadolint ignore=DL3008
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends rsync && \
+    apt-get install --yes --no-install-recommends ca-certificates curl rsync && \
+    curl --silent --show-error --location --output /bin/tini \
+    "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-$(dpkg --print-architecture)" && \
+    chmod +x /bin/tini && \
+    apt-get remove --purge --yes ca-certificates curl && \
+    apt-get autoremove --purge --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/bin/tini", "--"]
+ARG RSYNCD_DIR=/rsyncd
+ENV RSYNCD_DIR="${RSYNCD_DIR}"
+RUN mkdir -p "${RSYNCD_DIR}/run" "${RSYNCD_DIR}/data" /etc/rsyncd.d && \
+    chown -R nobody:nogroup "${RSYNCD_DIR}"
 
-CMD [ "/usr/bin/rsync","--no-detach","--daemon","--config","/etc/rsyncd.conf" ]
+COPY rsyncd.conf /etc/rsyncd.conf
+
+WORKDIR /rsyncd/data
+
+VOLUME ["/rsyncd/run","/rsyncd/data","/tmp"]
+
+EXPOSE 873
+
+USER nobody:nogroup
+
+ENTRYPOINT ["/bin/tini","--"]
+
+CMD ["/usr/bin/rsync", "--no-detach","--daemon","--config","/etc/rsyncd.conf"]
