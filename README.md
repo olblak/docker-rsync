@@ -16,9 +16,10 @@ docker build --tag rsyncd ./
 container-structure-test test --image=rsyncd --config=cst.yml
 ```
 
-- Acceptance testing the image with [`docker compose`](https://docs.docker.com/compose/):
+- Manual acceptance testing of the the image with [`docker compose`](https://docs.docker.com/compose/):
 
 ```shell
+$ cd ./tests
 $ docker compose up --build --detach
 $ sleep 2
 $ rsync -av rsync://localhost:1873/jenkins

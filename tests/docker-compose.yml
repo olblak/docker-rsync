@@ -4,12 +4,12 @@
 
 services:
   rsyncd-readonly-jenkins:
-    build: ./
+    build: ../
     read_only: true
     user: 65534:65534 # nobody:nogroup
     volumes:
-      - ./tests/data:/rsyncd/data:ro
-      - ./tests/rsyncd.d:/etc/rsyncd.d:ro
-      - ./tests/jenkins.motd:/etc/jenkins.motd:ro
+      - ./data:/rsyncd/data:ro
+      - ./rsyncd.d:/etc/rsyncd.d:ro
+      - ./jenkins.motd:/etc/jenkins.motd:ro
     ports:
       - 1873:873
