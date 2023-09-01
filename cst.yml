@@ -3,24 +3,45 @@ schemaVersion: 2.0.0
 metadataTest:
   entrypoint: ["/bin/tini", "--"]
   cmd: ["/usr/bin/rsync","--no-detach","--daemon","--config","/etc/rsyncd.conf"]
-  volumes: ["/srv/releases/jenkins", "/tmp", "/var/run"]
-  workdir: /srv/releases/jenkins
+  exposedPorts:
+    - "873"
+  user: nobody:nogroup
+  volumes: ["/rsyncd/data", "/rsyncd/run", "/tmp"]
+  workdir: /rsyncd/data
 
 fileExistenceTests:
   - name: "Rsyncd configuration file"
     path: "/etc/rsyncd.conf"
     shouldExist: true
-  - name: "Jenkins Motd"
-    path: "/etc/jenkins.motd"
+    uid: 0
+    gid: 0
+  - name: "Rsyncd configuration dir"
+    path: "/etc/rsyncd.d"
     shouldExist: true
+    uid: 0
+    gid: 0
   - name: "Tini process wrapper"
     path: "/bin/tini"
     shouldExist: true
     isExecutableBy: "any"
+    uid: 0
+    gid: 0
   - name: "Rsync"
     path: "/usr/bin/rsync"
     shouldExist: true
     isExecutableBy: "any"
+    uid: 0
+    gid: 0
+  - name: "Rsync run dir"
+    path: "/rsyncd/data"
+    shouldExist: true
+    uid: 65534
+    gid: 65534
+  - name: "Rsync data dir"
+    path: "/rsyncd/run"
+    shouldExist: true
+    uid: 65534
+    gid: 65534
 
 commandTests:
   - name: "Tini is installed with the correct version"

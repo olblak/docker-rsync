@@ -13,16 +13,21 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+ARG RSYNCD_DIR=/rsyncd
+ENV RSYNCD_DIR="${RSYNCD_DIR}"
+RUN mkdir -p "${RSYNCD_DIR}/run" "${RSYNCD_DIR}/data" /etc/rsyncd.d && \
+    chown -R nobody:nogroup "${RSYNCD_DIR}"
+
 COPY config/rsyncd.conf /etc/rsyncd.conf
 
-COPY config/jenkins.motd /etc/jenkins.motd
+WORKDIR /rsyncd/data
 
-VOLUME ["/srv/releases/jenkins", "/tmp", "/var/run"]
-
-WORKDIR /srv/releases/jenkins
+VOLUME ["/rsyncd/run","/rsyncd/data","/tmp"]
 
 EXPOSE 873
 
-ENTRYPOINT ["/bin/tini", "--"]
+USER nobody:nogroup
 
-CMD [ "/usr/bin/rsync","--no-detach","--daemon","--config","/etc/rsyncd.conf" ]
+ENTRYPOINT ["/bin/tini","--"]
+
+CMD ["/usr/bin/rsync", "--no-detach","--daemon","--config","/etc/rsyncd.conf"]
