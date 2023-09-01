@@ -18,7 +18,7 @@ ENV RSYNCD_DIR="${RSYNCD_DIR}"
 RUN mkdir -p "${RSYNCD_DIR}/run" "${RSYNCD_DIR}/data" /etc/rsyncd.d && \
     chown -R nobody:nogroup "${RSYNCD_DIR}"
 
-COPY config/rsyncd.conf /etc/rsyncd.conf
+COPY rsyncd.conf /etc/rsyncd.conf
 
 WORKDIR /rsyncd/data
 
