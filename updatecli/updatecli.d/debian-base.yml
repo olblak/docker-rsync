@@ -1,0 +1,45 @@
+name: Bump `debian` version
+
+scms:
+  default:
+    kind: github
+    spec:
+      user: "{{ .github.user }}"
+      email: "{{ .github.email }}"
+      owner: "{{ .github.owner }}"
+      repository: "{{ .github.repository }}"
+      token: "{{ requiredEnv .github.token }}"
+      username: "{{ .github.username }}"
+      branch: "{{ .github.branch }}"
+
+sources:
+  lastVersion:
+    kind: dockerimage
+    name: Get the latest version
+    spec:
+      architectures:
+        - arm64
+        - amd64
+      image: debian
+      tagfilter: "^stable-.*-slim$"
+
+targets:
+  updateDockerfile:
+    name: "Update the value of ARG TINI_VERSION in the Dockerfile"
+    kind: dockerfile
+    spec:
+      file: Dockerfile
+      instruction:
+        keyword: FROM
+        matcher: debian
+    scmid: default
+
+actions:
+  default:
+    kind: github/pullrequest
+    scmid: default
+    spec:
+      title: Bump Bump `debian` version to {{ source "lastVersion" }}
+      labels:
+        - dependencies
+        - debian
