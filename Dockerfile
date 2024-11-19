@@ -1,4 +1,4 @@
-FROM debian:bookworm-20230814-slim
+FROM debian:stable-20241111-slim
 
 ARG TINI_VERSION=v0.19.0
 ## We always want the latest rsync version
