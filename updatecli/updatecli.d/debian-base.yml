@@ -39,7 +39,7 @@ actions:
     kind: github/pullrequest
     scmid: default
     spec:
-      title: feat: Bump `debian` version to {{ source "lastVersion" }}
+      title: 'feat: Bump `debian` version to {{ source "lastVersion" }}'
       labels:
         - dependencies
         - debian
