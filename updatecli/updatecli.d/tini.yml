@@ -43,6 +43,18 @@ targets:
         keyword: ARG
         matcher: TINI_VERSION
     scmid: default
+  updateCSTTiniVersion:
+    name: Update the tini version in the `cst.yml` file
+    sourceid: getTiniVersion
+    transformers:
+      - trimprefix: 'v'
+      - addprefix: '"'
+      - addsuffix: '"'
+    kind: yaml
+    spec:
+      file: cst.yml
+      key: $.commandTests[0].expectedOutput[0]
+    scmid: default
 
 actions:
   default:

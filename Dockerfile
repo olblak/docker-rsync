@@ -1,33 +1,59 @@
 FROM debian:stable-20241111-slim
 
+SHELL ["/bin/bash", "-e", "-u", "-o", "pipefail", "-c"]
+
 ARG TINI_VERSION=v0.19.0
 ## We always want the latest rsync version
 # hadolint ignore=DL3008
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends ca-certificates curl rsync && \
-    curl --silent --show-error --location --output /bin/tini \
-    "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-$(dpkg --print-architecture)" && \
-    chmod +x /bin/tini && \
-    apt-get remove --purge --yes ca-certificates curl && \
-    apt-get autoremove --purge --yes && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+    ca-certificates \
+    curl \
+    gettext-base \
+    rsync \
+    openssh-server \
+    && curl --silent --show-error --location --output /bin/tini \
+    "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-$(dpkg --print-architecture)" \
+    && chmod +x /bin/tini \
+    && apt-get remove --purge --yes ca-certificates curl \
+    && apt-get autoremove --purge --yes \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-ARG RSYNCD_DIR=/rsyncd
-ENV RSYNCD_DIR="${RSYNCD_DIR}"
-RUN mkdir -p "${RSYNCD_DIR}/run" "${RSYNCD_DIR}/data" /etc/rsyncd.d && \
-    chown -R nobody:nogroup "${RSYNCD_DIR}"
+ARG user=rsyncd
+ARG group=rsyncd
+ARG uid=1000
+ARG gid=1000
+ARG user_home="/home/${user}"
+ENV USER_ETC_DIR="${user_home}/etc"
+ENV USER_RUN_DIR="${user_home}/run"
 
-COPY rsyncd.conf /etc/rsyncd.conf
+RUN groupadd -g ${gid} ${group} \
+    && useradd -l -d "${user_home}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}" \
+    && mkdir -p "${user_home}"/.ssh "${user_home}"/data "${USER_RUN_DIR}" "${USER_ETC_DIR}"/rsyncd.d
 
-WORKDIR /rsyncd/data
+COPY rsyncd.conf "${user_home}"/etc/rsyncd.conf.orig
+COPY sshd_config "${user_home}"/etc/sshd_config.orig
+COPY entrypoint.sh /entrypoint.sh
+COPY ssh-rsync-wrapper.sh /ssh-rsync-wrapper.sh
 
-VOLUME ["/rsyncd/run","/rsyncd/data","/tmp"]
+RUN chown -R "${uid}:${gid}" "${user_home}" \
+    && sed -i '/pam_motd/s/^/#/' /etc/pam.d/sshd
 
-EXPOSE 873
+ENV SSH_PORT=22
+ENV RSYNC_PORT=873
 
-USER nobody:nogroup
+WORKDIR "${user_home}"/data
+
+VOLUME "${user_home}" "/tmp"
+
+EXPOSE $RSYNC_PORT $SSH_PORT
+
+USER $user
+
+# Change it to 'sshd' to use rsync over SSH instead of rsyncd
+ENV RSYNC_DAEMON="rsyncd"
 
 ENTRYPOINT ["/bin/tini","--"]
 
-CMD ["/usr/bin/rsync", "--no-detach","--daemon","--config","/etc/rsyncd.conf"]
+CMD ["/entrypoint.sh"]
