@@ -1,5 +1,5 @@
 ## Use a non-privileged port
-Port ${SSH_PORT}
+Port ${SSHD_PORT}
 ## provide the new path containing these host keys
 HostKey "${USER_ETC_DIR}"/ssh_host_rsa_key
 HostKey "${USER_ETC_DIR}"/ssh_host_ecdsa_key

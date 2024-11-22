@@ -40,14 +40,14 @@ COPY ssh-rsync-wrapper.sh /ssh-rsync-wrapper.sh
 RUN chown -R "${uid}:${gid}" "${user_home}" \
     && sed -i '/pam_motd/s/^/#/' /etc/pam.d/sshd
 
-ENV SSH_PORT=22
+ENV SSHD_PORT=22
 ENV RSYNCD_PORT=873
 
 WORKDIR "${user_home}"/data
 
 VOLUME "${user_home}" "/tmp"
 
-EXPOSE $RSYNCD_PORT $SSH_PORT
+EXPOSE $RSYNCD_PORT $SSHD_PORT
 
 USER $user
 

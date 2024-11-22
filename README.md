@@ -66,11 +66,11 @@ docker run --detach --read-only -p 22:22 -e RSYNC_DAEMON=sshd -e SSH_PUBLIC_KEY=
 rsync -av --rsh="ssh -i $HOME/.ssh/id_rsyncd" rsyncd@localhost:data/ .tmp/
 ```
 
-It exposes the default SSH port `22`, which can be changed using the `$SSH_PORT` environment variable:
+It exposes the default SSH port `22`, which can be changed using the `$SSHD_PORT` environment variable:
 
 ```shell
 # Start in background and publishes the port 4022
-docker run --detach --read-only -p 4022:4022 -e SSH_PORT=4022 -e RSYNC_DAEMON=sshd -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
+docker run --detach --read-only -p 4022:4022 -e SSHD_PORT=4022 -e RSYNC_DAEMON=sshd -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
 # Check default dir (empty) with the rsync protocol and unauthenticated request
 rsync -av --rsh="ssh -p 4022 -i $HOME/.ssh/id_rsyncd" rsyncd@localhost:data/ .tmp/
 ```
