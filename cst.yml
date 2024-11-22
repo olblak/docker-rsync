@@ -10,7 +10,7 @@ metadataTest:
   envVars:
     - key: RSYNC_DAEMON
       value: rsyncd
-    - key: SSH_PORT
+    - key: SSHD_PORT
       value: "22"
     - key: RSYNCD_PORT
       value: "873"

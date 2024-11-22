@@ -11,7 +11,7 @@ case "${RSYNC_DAEMON:-rsyncd}" in
       exec /usr/bin/rsync --no-detach --daemon --config "${USER_ETC_DIR}"/rsyncd.conf;;
     'sshd')
       # Generate configuration from env vars
-      envsubst '$SSH_PORT $USER_ETC_DIR $USER_RUN_DIR'< "${USER_ETC_DIR}"/sshd_config.orig > "${USER_ETC_DIR}"/sshd_config
+      envsubst '$SSHD_PORT $USER_ETC_DIR $USER_RUN_DIR'< "${USER_ETC_DIR}"/sshd_config.orig > "${USER_ETC_DIR}"/sshd_config
 
       # Generate hostkeys
       ssh-keygen -q -N "" -t dsa -f "${USER_ETC_DIR}"/ssh_host_dsa_key
