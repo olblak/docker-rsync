@@ -20,11 +20,11 @@ docker run --detach --read-only -p 873:873 rsyncd
 rsync -av --port=873 localhost::root/ .tmp/
 ```
 
-It exposes the default Rsync port `873`, which can be changed using the `$RSYNC_PORT` environment variable:
+It exposes the default Rsync port `873`, which can be changed using the `$RSYNCD_PORT` environment variable:
 
 ```shell
 # Start in background with defaults
-docker run --detach --read-only -p 1873:1873 -e RSYNC_PORT=1873 rsyncd
+docker run --detach --read-only -p 1873:1873 -e RSYNCD_PORT=1873 rsyncd
 # Check default dir (empty) with the rsync protocol and unauthenticated request
 rsync -av --port=1873 localhost::root/ .tmp/
 ```

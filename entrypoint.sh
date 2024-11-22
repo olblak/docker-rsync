@@ -5,7 +5,7 @@ set -eux -o pipefail
 case "${RSYNC_DAEMON:-rsyncd}" in
     'rsyncd')
       # Generate configuration from env vars
-      envsubst '$RSYNC_PORT $USER_ETC_DIR $USER_RUN_DIR'< "${USER_ETC_DIR}"/rsyncd.conf.orig > "${USER_ETC_DIR}"/rsyncd.conf
+      envsubst '$RSYNCD_PORT $USER_ETC_DIR $USER_RUN_DIR'< "${USER_ETC_DIR}"/rsyncd.conf.orig > "${USER_ETC_DIR}"/rsyncd.conf
       cat "${USER_ETC_DIR}"/rsyncd.conf
       # Start rsyncd daemon
       exec /usr/bin/rsync --no-detach --daemon --config "${USER_ETC_DIR}"/rsyncd.conf;;

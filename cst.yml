@@ -12,7 +12,7 @@ metadataTest:
       value: rsyncd
     - key: SSH_PORT
       value: "22"
-    - key: RSYNC_PORT
+    - key: RSYNCD_PORT
       value: "873"
     - key: USER_ETC_DIR
       value: /home/rsyncd/etc
