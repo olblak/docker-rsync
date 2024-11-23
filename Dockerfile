@@ -52,7 +52,9 @@ EXPOSE $RSYNCD_PORT $SSHD_PORT
 USER $user
 
 # Change it to 'sshd' to use rsync over SSH instead of rsyncd
-ENV RSYNC_DAEMON="rsyncd"
+ENV RSYNCD_DAEMON="rsyncd"
+
+ENV SSHD_LOG_LEVEL="INFO"
 
 ENTRYPOINT ["/bin/tini","--"]
 

@@ -48,20 +48,20 @@ rsync -av --port=873 localhost::jenkins/ .tmp/jenkins/
 
 This mode should be preferred when using authenticated access (usually to write data).
 
-To enable SSH instead of RsyncD, the environment variable `$RSYNC_DAEMON` must be set to the value `sshd`.
+To enable SSH instead of RsyncD, the environment variable `$RSYNCD_DAEMON` must be set to the value `sshd`.
 
 SSH is restricted to only `rsync *` commands for the `rsyncd` user:
 you cannot login and execute commands, no port/X11 forwarding and no SCP/sftp are allowed
 (see the `ssh-rsync-wrapper.sh` script specified in the authorized keys).
 
 SSH Authentication is restricted to only 1 public key associated to the default user `rsyncd`.
-This key is provided through the `$SSH_PUBLIC_KEY` environment variable.
+This key is provided through the `$SSHD_PUBLIC_KEY` environment variable.
 
 Simple example:
 
 ```shell
 # Start in background
-docker run --detach --read-only -p 22:22 -e RSYNC_DAEMON=sshd -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
+docker run --detach --read-only -p 22:22 -e RSYNCD_DAEMON=sshd -e SSHD_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
 # Check default dir (empty) with the rsync protocol and unauthenticated request
 rsync -av --rsh="ssh -i $HOME/.ssh/id_rsyncd" rsyncd@localhost:data/ .tmp/
 ```
@@ -70,10 +70,13 @@ It exposes the default SSH port `22`, which can be changed using the `$SSHD_PORT
 
 ```shell
 # Start in background and publishes the port 4022
-docker run --detach --read-only -p 4022:4022 -e SSHD_PORT=4022 -e RSYNC_DAEMON=sshd -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
+docker run --detach --read-only -p 4022:4022 -e SSHD_PORT=4022 -e RSYNCD_DAEMON=sshd -e SSHD_PUBLIC_KEY="$(cat ~/.ssh/id_rsyncd.pub)" rsyncd
 # Check default dir (empty) with the rsync protocol and unauthenticated request
 rsync -av --rsh="ssh -p 4022 -i $HOME/.ssh/id_rsyncd" rsyncd@localhost:data/ .tmp/
 ```
+
+SSH Daemon log level can be set through the `$SSHD_LOG_LEVEL` environment variable.
+Default value is `INFO`, refer to <https://manpages.debian.org/testing/openssh-server/sshd_config.5.en.html#LogLevel> for possible values.
 
 Safety Note: There are no concepts of "Rsync" module with SSH: any specified directory accessible by the `rsyncd` user can be read (...or written).
 As such, it's recommended to always use a read-only rootfs and eventually restrict network access as additional security measures to the key based authentication.
