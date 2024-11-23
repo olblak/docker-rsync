@@ -8,7 +8,7 @@ metadataTest:
     - "873"
   user: rsyncd
   envVars:
-    - key: RSYNC_DAEMON
+    - key: RSYNCD_DAEMON
       value: rsyncd
     - key: SSHD_PORT
       value: "22"
@@ -18,6 +18,8 @@ metadataTest:
       value: /home/rsyncd/etc
     - key: USER_RUN_DIR
       value: /home/rsyncd/run
+    - key: SSHD_LOG_LEVEL
+      value: INFO
   volumes: ["/home/rsyncd", "/tmp"]
   workdir: /home/rsyncd/data
 

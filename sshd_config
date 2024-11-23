@@ -4,8 +4,7 @@ Port ${SSHD_PORT}
 HostKey "${USER_ETC_DIR}"/ssh_host_rsa_key
 HostKey "${USER_ETC_DIR}"/ssh_host_ecdsa_key
 HostKey "${USER_ETC_DIR}"/ssh_host_ed25519_key
-## Enable DEBUG log. You can ignore this but this may help you debug any issue while enabling SSHD for the first time
-# LogLevel DEBUG3
+LogLevel ${SSHD_LOG_LEVEL}
 ## Provide a path to store PID file which is accessible by normal user for write purpose
 PidFile "${USER_RUN_DIR}"/sshd.pid
 
@@ -15,7 +14,7 @@ KbdInteractiveAuthentication no
 PasswordAuthentication no
 PermitRootLogin no
 SyslogFacility AUTH
-UsePAM yes
+UsePAM no
 X11Forwarding no
 PrintMotd no
 Subsystem       sftp    /usr/lib/openssh/sftp-server
