@@ -1,9 +1,9 @@
 ## Use a non-privileged port
 Port ${SSHD_PORT}
 ## provide the new path containing these host keys
-HostKey "${USER_ETC_DIR}"/ssh_host_rsa_key
-HostKey "${USER_ETC_DIR}"/ssh_host_ecdsa_key
-HostKey "${USER_ETC_DIR}"/ssh_host_ed25519_key
+HostKey ${HOST_KEYS_DIR}/ssh_host_rsa_key
+HostKey ${HOST_KEYS_DIR}/ssh_host_ecdsa_key
+HostKey ${HOST_KEYS_DIR}/ssh_host_ed25519_key
 LogLevel ${SSHD_LOG_LEVEL}
 ## Provide a path to store PID file which is accessible by normal user for write purpose
 PidFile "${USER_RUN_DIR}"/sshd.pid
