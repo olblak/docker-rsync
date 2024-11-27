@@ -81,6 +81,8 @@ Default value is `INFO`, refer to <https://manpages.debian.org/testing/openssh-s
 Safety Note: There are no concepts of "Rsync" module with SSH: any specified directory accessible by the `rsyncd` user can be read (...or written).
 As such, it's recommended to always use a read-only rootfs and eventually restrict network access as additional security measures to the key based authentication.
 
+You can provide a set of pre-existing host keys to be used (instead of generating a new set if absent) through the variable `HOST_KEYS_SRC_DIR`.
+
 ## Build the image
 
 ```shell

@@ -31,7 +31,7 @@ ENV USER_RUN_DIR="${user_home}/run"
 
 RUN groupadd -g ${gid} ${group} \
     && useradd -l -d "${user_home}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}" \
-    && mkdir -p "${user_home}"/.ssh "${user_home}"/data "${USER_RUN_DIR}" "${USER_ETC_DIR}"/rsyncd.d
+    && mkdir -p "${user_home}"/.ssh "${user_home}"/data "${USER_RUN_DIR}" "${USER_ETC_DIR}"/rsyncd.d "${USER_ETC_DIR}"/keys
 
 COPY rsyncd.conf "${user_home}"/etc/rsyncd.conf.orig
 COPY sshd_config "${user_home}"/etc/sshd_config.orig

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+: "${HOST_KEYS_SRC_DIR:="/notexisting"}"
+
 set -eux -o pipefail
 
 case "${RSYNCD_DAEMON:-rsyncd}" in
@@ -16,6 +18,11 @@ case "${RSYNCD_DAEMON:-rsyncd}" in
       envsubst '$SSHD_PORT $SSHD_LOG_LEVEL $USER_ETC_DIR $USER_RUN_DIR $HOST_KEYS_DIR'< "${USER_ETC_DIR}"/sshd_config.orig > "${USER_ETC_DIR}"/sshd_config
 
       # Generate hostkeys if absent
+      if [ -d "${HOST_KEYS_SRC_DIR}" ]
+      then
+        rsync -av "${HOST_KEYS_SRC_DIR}"/ssh_host* "${HOST_KEYS_DIR}"/
+      fi
+
       test -f "${HOST_KEYS_DIR}"/ssh_host_dsa_key || ssh-keygen -q -N "" -t dsa -f "${HOST_KEYS_DIR}"/ssh_host_dsa_key
       test -f "${HOST_KEYS_DIR}"/ssh_host_rsa_key || ssh-keygen -q -N "" -t rsa -b 4096 -f "${HOST_KEYS_DIR}"/ssh_host_rsa_key
       test -f "${HOST_KEYS_DIR}"/ssh_host_ecdsa_key || ssh-keygen -q -N "" -t ecdsa -f "${HOST_KEYS_DIR}"/ssh_host_ecdsa_key
