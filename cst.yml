@@ -18,6 +18,8 @@ metadataTest:
       value: /home/rsyncd/etc
     - key: USER_RUN_DIR
       value: /home/rsyncd/run
+    - key: HOST_KEYS_DIR
+      value: /home/rsyncd/etc/keys
     - key: SSHD_LOG_LEVEL
       value: INFO
   volumes: ["/home/rsyncd", "/tmp"]

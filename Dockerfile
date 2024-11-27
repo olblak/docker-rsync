@@ -26,6 +26,7 @@ ARG uid=1000
 ARG gid=1000
 ARG user_home="/home/${user}"
 ENV USER_ETC_DIR="${user_home}/etc"
+ENV HOST_KEYS_DIR="${USER_ETC_DIR}/keys"
 ENV USER_RUN_DIR="${user_home}/run"
 
 RUN groupadd -g ${gid} ${group} \

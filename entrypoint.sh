@@ -13,13 +13,13 @@ case "${RSYNCD_DAEMON:-rsyncd}" in
     'sshd')
       # We do not want expansion for envsubst argument
       # shellcheck disable=SC2016
-      envsubst '$SSHD_PORT $SSHD_LOG_LEVEL $USER_ETC_DIR $USER_RUN_DIR'< "${USER_ETC_DIR}"/sshd_config.orig > "${USER_ETC_DIR}"/sshd_config
+      envsubst '$SSHD_PORT $SSHD_LOG_LEVEL $USER_ETC_DIR $USER_RUN_DIR $HOST_KEYS_DIR'< "${USER_ETC_DIR}"/sshd_config.orig > "${USER_ETC_DIR}"/sshd_config
 
       # Generate hostkeys if absent
-      test -f "${USER_ETC_DIR}"/ssh_host_dsa_key || ssh-keygen -q -N "" -t dsa -f "${USER_ETC_DIR}"/ssh_host_dsa_key
-      test -f "${USER_ETC_DIR}"/ssh_host_rsa_key || ssh-keygen -q -N "" -t rsa -b 4096 -f "${USER_ETC_DIR}"/ssh_host_rsa_key
-      test -f "${USER_ETC_DIR}"/ssh_host_ecdsa_key || ssh-keygen -q -N "" -t ecdsa -f "${USER_ETC_DIR}"/ssh_host_ecdsa_key
-      test -f "${USER_ETC_DIR}"/ssh_host_ed25519_key || ssh-keygen -q -N "" -t ed25519 -f "${USER_ETC_DIR}"/ssh_host_ed25519_key
+      test -f "${HOST_KEYS_DIR}"/ssh_host_dsa_key || ssh-keygen -q -N "" -t dsa -f "${HOST_KEYS_DIR}"/ssh_host_dsa_key
+      test -f "${HOST_KEYS_DIR}"/ssh_host_rsa_key || ssh-keygen -q -N "" -t rsa -b 4096 -f "${HOST_KEYS_DIR}"/ssh_host_rsa_key
+      test -f "${HOST_KEYS_DIR}"/ssh_host_ecdsa_key || ssh-keygen -q -N "" -t ecdsa -f "${HOST_KEYS_DIR}"/ssh_host_ecdsa_key
+      test -f "${HOST_KEYS_DIR}"/ssh_host_ed25519_key || ssh-keygen -q -N "" -t ed25519 -f "${HOST_KEYS_DIR}"/ssh_host_ed25519_key
 
       # Load public key if provided
       if [[ "${SSHD_PUBLIC_KEY:-'defaultNoKey'}" == ssh-* ]]; then
